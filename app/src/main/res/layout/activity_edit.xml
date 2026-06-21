@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_background"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/brand_background"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationContentDescription="رجوع"
+            app:menu="@menu/menu_edit"
+            style="@style/Widget.App.Toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- منطقة عرض الصورة -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/black">
+
+            <ImageView
+                android:id="@+id/iv_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:contentDescription="معاينة الصورة"
+                android:background="@android:color/transparent" />
+
+            <!-- طبقة مقارنة قبل/بعد -->
+            <ImageView
+                android:id="@+id/iv_original"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                android:alpha="0.5"
+                android:contentDescription="الصورة الأصلية" />
+
+            <!-- شريط التقدّم -->
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:indeterminateTint="@color/brand_primary" />
+
+            <!-- مؤشر المقارنة -->
+            <TextView
+                android:id="@+id/tv_compare_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:paddingHorizontal="@dimen/spacing_md"
+                android:paddingVertical="@dimen/spacing_xs"
+                android:background="@drawable/bg_compare_label"
+                android:text="الأصلية - اضغط للمقارنة"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- لوحة الأدوات السفلية -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_panel_height"
+            app:cardCornerRadius="0dp"
+            app:cardBackgroundColor="@color/brand_surface"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- التبويبات -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    style="@style/Widget.App.TabLayout" />
+
+                <!-- محتوى التبويبات -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <!-- تبويب الفلاتر -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_filters"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="@dimen/spacing_sm"
+                        android:paddingVertical="@dimen/spacing_sm"
+                        android:scrollbars="horizontal"
+                        android:visibility="visible" />
+
+                    <!-- تبويب التعديل -->
+                    <ScrollView
+                        android:id="@+id/layout_adjust"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/spacing_sm"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_brightness" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_contrast"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_saturation"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_warmth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_exposure"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_highlights"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_shadows"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_sharpness"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_vignette"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+
+                            <include layout="@layout/item_slider"
+                                android:id="@+id/slider_grain"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_sm" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <!-- تبويب التحويل -->
+                    <LinearLayout
+                        android:id="@+id/layout_transform"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_md"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="التدوير والقلب"
+                            android:textAppearance="@style/TextAppearance.App.Title"
+                            android:layout_marginBottom="@dimen/spacing_md" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_rotate_left"
+                                android:layout_width="0dp"
+                                android:layout_height="64dp"
+                                android:layout_weight="1"
+                                android:text="يسار"
+                                app:icon="@drawable/ic_rotate_left"
+                                app:iconGravity="top"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_rotate_right"
+                                android:layout_width="0dp"
+                                android:layout_height="64dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="@dimen/spacing_sm"
+                                android:text="يمين"
+                                app:icon="@drawable/ic_rotate_right"
+                                app:iconGravity="top"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_flip_h"
+                                android:layout_width="0dp"
+                                android:layout_height="64dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="@dimen/spacing_sm"
+                                android:text="قلب أفقي"
+                                app:icon="@drawable/ic_flip_h"
+                                app:iconGravity="top"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_flip_v"
+                                android:layout_width="0dp"
+                                android:layout_height="64dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="@dimen/spacing_sm"
+                                android:text="قلب عمودي"
+                                app:icon="@drawable/ic_flip_v"
+                                app:iconGravity="top"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_crop"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:text="@string/tab_crop"
+                            app:icon="@drawable/ic_crop"
+                            app:iconGravity="textStart"
+                            style="@style/Widget.App.Button.Primary" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

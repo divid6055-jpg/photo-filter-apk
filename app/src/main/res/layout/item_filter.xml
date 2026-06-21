@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/spacing_xs">
+
+    <FrameLayout
+        android:layout_width="@dimen/filter_preview_size"
+        android:layout_height="@dimen/filter_preview_size">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@color/brand_outline"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.FilterPreview" />
+
+        <View
+            android:id="@+id/view_selected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_filter_selected"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xs"
+        android:text="الأصلي"
+        android:textAppearance="@style/TextAppearance.App.Caption"
+        android:textSize="12sp"
+        android:maxEms="6"
+        android:maxLines="1"
+        android:ellipsize="end" />
+</LinearLayout>
