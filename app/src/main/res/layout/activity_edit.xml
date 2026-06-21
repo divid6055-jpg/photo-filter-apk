@@ -5,15 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_background"
+    android:background="@color/editor_canvas"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/brand_background"
-        app:elevation="0dp">
+        android:background="@color/brand_surface"
+        app:elevation="0dp"
+        app:liftOnScroll="false">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -22,7 +23,9 @@
             app:navigationIcon="@drawable/ic_back"
             app:navigationContentDescription="رجوع"
             app:menu="@menu/menu_edit"
-            style="@style/Widget.App.Toolbar" />
+            android:background="@color/brand_surface"
+            app:titleCentered="false"
+            app:title="تحرير الصورة" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -31,13 +34,14 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- منطقة عرض الصورة -->
+        <!-- ============== منطقة عرض الصورة ============== -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/black">
+            android:background="@color/editor_canvas">
 
+            <!-- الـ ImageView الأساسية للصورة المعالجة -->
             <ImageView
                 android:id="@+id/iv_preview"
                 android:layout_width="match_parent"
@@ -46,75 +50,80 @@
                 android:contentDescription="معاينة الصورة"
                 android:background="@android:color/transparent" />
 
-            <!-- طبقة مقارنة قبل/بعد -->
-            <ImageView
-                android:id="@+id/iv_original"
+            <!-- Before/After Slider View -->
+            <com.photofilter.pro.ui.BeforeAfterView
+                android:id="@+id/before_after_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:alpha="0.5"
-                android:contentDescription="الصورة الأصلية" />
+                android:visibility="gone" />
 
-            <!-- شريط التقدّم -->
+            <!-- شريط التقدّم في المنتصف -->
             <ProgressBar
                 android:id="@+id/progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:indeterminateTint="@color/brand_primary" />
+                android:indeterminateTint="@color/brand_primary"
+                android:indeterminateTintMode="src_in" />
 
-            <!-- مؤشر المقارنة -->
+            <!-- تسمية الوضع الحالي -->
             <TextView
-                android:id="@+id/tv_compare_label"
+                android:id="@+id/tv_mode_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:paddingHorizontal="@dimen/spacing_md"
-                android:paddingVertical="@dimen/spacing_xs"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
                 android:background="@drawable/bg_compare_label"
-                android:text="الأصلية - اضغط للمقارنة"
+                android:text="اضغط للمقارنة"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </FrameLayout>
 
-        <!-- لوحة الأدوات السفلية -->
+        <!-- ============== لوحة الأدوات السفلية ============== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_panel_height"
+            android:layout_height="wrap_content"
             app:cardCornerRadius="0dp"
             app:cardBackgroundColor="@color/brand_surface"
-            app:cardElevation="4dp">
+            app:cardElevation="8dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:minHeight="220dp">
 
                 <!-- التبويبات -->
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="52dp"
+                    app:tabIndicatorAnimationMode="elastic"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill"
+                    app:tabIndicatorFullWidth="false"
                     style="@style/Widget.App.TabLayout" />
 
                 <!-- محتوى التبويبات -->
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_height="wrap_content"
+                    android:minHeight="170dp">
 
                     <!-- تبويب الفلاتر -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_filters"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="170dp"
                         android:clipToPadding="false"
-                        android:paddingHorizontal="@dimen/spacing_sm"
-                        android:paddingVertical="@dimen/spacing_sm"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="8dp"
                         android:scrollbars="horizontal"
                         android:visibility="visible" />
 
@@ -122,8 +131,11 @@
                     <ScrollView
                         android:id="@+id/layout_adjust"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="@dimen/spacing_sm"
+                        android:layout_height="wrap_content"
+                        android:minHeight="170dp"
+                        android:maxHeight="280dp"
+                        android:padding="8dp"
+                        android:scrollbars="vertical"
                         android:visibility="gone">
 
                         <LinearLayout
@@ -133,60 +145,51 @@
 
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_brightness" />
-
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_contrast"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_saturation"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_warmth"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_exposure"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_highlights"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_shadows"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_sharpness"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_vignette"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
-
+                                android:layout_marginTop="4dp" />
                             <include layout="@layout/item_slider"
                                 android:id="@+id/slider_grain"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_sm" />
+                                android:layout_marginTop="4dp" />
                         </LinearLayout>
                     </ScrollView>
 
@@ -194,9 +197,10 @@
                     <LinearLayout
                         android:id="@+id/layout_transform"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="170dp"
                         android:orientation="vertical"
-                        android:padding="@dimen/spacing_md"
+                        android:padding="16dp"
                         android:visibility="gone">
 
                         <TextView
@@ -204,64 +208,135 @@
                             android:layout_height="wrap_content"
                             android:text="التدوير والقلب"
                             android:textAppearance="@style/TextAppearance.App.Title"
-                            android:layout_marginBottom="@dimen/spacing_md" />
+                            android:layout_marginBottom="12dp" />
 
+                        <!-- أزرار دائرية للتحويل -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:weightSum="4">
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_rotate_left"
+                            <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="يسار"
-                                app:icon="@drawable/ic_rotate_left"
-                                app:iconGravity="top"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                                android:orientation="vertical"
+                                android:gravity="center">
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_rotate_right"
-                                android:layout_width="0dp"
-                                android:layout_height="64dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="@dimen/spacing_sm"
-                                android:text="يمين"
-                                app:icon="@drawable/ic_rotate_right"
-                                app:iconGravity="top"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/btn_rotate_left"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:src="@drawable/ic_rotate_left"
+                                    android:background="@drawable/circle_gradient"
+                                    android:padding="14dp"
+                                    android:elevation="4dp"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Large"
+                                    app:tint="@color/white"
+                                    android:contentDescription="تدوير يسار" />
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_flip_h"
-                                android:layout_width="0dp"
-                                android:layout_height="64dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="@dimen/spacing_sm"
-                                android:text="قلب أفقي"
-                                app:icon="@drawable/ic_flip_h"
-                                app:iconGravity="top"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:text="يسار"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/brand_text_secondary" />
+                            </LinearLayout>
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_flip_v"
+                            <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="@dimen/spacing_sm"
-                                android:text="قلب عمودي"
-                                app:icon="@drawable/ic_flip_v"
-                                app:iconGravity="top"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/btn_rotate_right"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:src="@drawable/ic_rotate_right"
+                                    android:background="@drawable/circle_gradient"
+                                    android:padding="14dp"
+                                    android:elevation="4dp"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Large"
+                                    app:tint="@color/white"
+                                    android:contentDescription="تدوير يمين" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:text="يمين"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/brand_text_secondary" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/btn_flip_h"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:src="@drawable/ic_flip_h"
+                                    android:background="@drawable/circle_gradient"
+                                    android:padding="14dp"
+                                    android:elevation="4dp"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Large"
+                                    app:tint="@color/white"
+                                    android:contentDescription="قلب أفقي" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:text="أفقي"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/brand_text_secondary" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/btn_flip_v"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:src="@drawable/ic_flip_v"
+                                    android:background="@drawable/circle_gradient"
+                                    android:padding="14dp"
+                                    android:elevation="4dp"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Large"
+                                    app:tint="@color/white"
+                                    android:contentDescription="قلب عمودي" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:text="عمودي"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/brand_text_secondary" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_crop"
                             android:layout_width="match_parent"
                             android:layout_height="56dp"
-                            android:layout_marginTop="@dimen/spacing_lg"
-                            android:text="@string/tab_crop"
+                            android:layout_marginTop="20dp"
+                            android:text="قص الصورة"
                             app:icon="@drawable/ic_crop"
                             app:iconGravity="textStart"
                             style="@style/Widget.App.Button.Primary" />
@@ -270,4 +345,20 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
+
+    <!-- زر عائم لـ before/after -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_compare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="240dp"
+        android:src="@drawable/ic_compare"
+        android:contentDescription="مقارنة قبل/بعد"
+        app:backgroundTint="@color/brand_primary"
+        app:tint="@color/white"
+        app:elevation="8dp"
+        app:borderWidth="0dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

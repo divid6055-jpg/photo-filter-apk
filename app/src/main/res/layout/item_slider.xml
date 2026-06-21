@@ -3,36 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingHorizontal="@dimen/spacing_sm"
-    android:paddingVertical="@dimen/spacing_xs">
+    android:orientation="vertical"
+    android:background="@drawable/bg_slider_item"
+    android:padding="12dp"
+    android:layout_marginBottom="6dp">
 
-    <TextView
-        android:id="@+id/tv_label"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="السطوع"
-        android:textAppearance="@style/TextAppearance.App.Body"
-        android:textSize="14sp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="السطوع"
+            android:textAppearance="@style/TextAppearance.App.Body"
+            android:textSize="14sp"
+            android:textColor="@color/brand_text_primary" />
+
+        <TextView
+            android:id="@+id/tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textAppearance="@style/TextAppearance.App.Caption"
+            android:textSize="12sp"
+            android:textColor="@color/brand_primary"
+            android:textStyle="bold"
+            android:fontFamily="monospace" />
+    </LinearLayout>
 
     <com.google.android.material.slider.Slider
         android:id="@+id/slider"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/spacing_sm"
+        android:layout_marginTop="4dp"
         android:valueFrom="-100"
         android:valueTo="100"
         android:value="0"
         style="@style/Widget.App.Slider" />
-
-    <TextView
-        android:id="@+id/tv_value"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.App.Caption"
-        android:textSize="12sp" />
 </LinearLayout>

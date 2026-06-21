@@ -3,10 +3,10 @@ package com.photofilter.pro
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -33,9 +33,8 @@ class EditActivity : AppCompatActivity() {
 
     private var sourceBitmap: Bitmap? = null
     private var editorState: EditorState = EditorState()
-    private var isComparing = false
+    private var compareMode: Boolean = false
 
-    // debouncing لمنع المعالجة المتكررة عند تحريك الـ slider
     private var processingJob: Job? = null
     private var previewJob: Job? = null
 
@@ -46,12 +45,12 @@ class EditActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ""
+        supportActionBar?.title = "تحرير الصورة"
 
         setupSliders()
         setupTabs()
         setupTransformButtons()
-        setupCompareTouch()
+        setupCompareButton()
 
         loadImageFromIntent()
     }
@@ -76,7 +75,8 @@ class EditActivity : AppCompatActivity() {
             }
             sourceBitmap = bitmap
             binding.ivPreview.setImageBitmap(bitmap)
-            binding.ivOriginal.setImageBitmap(bitmap)
+            binding.beforeAfterView.setBeforeBitmap(bitmap)
+            binding.beforeAfterView.setAfterBitmap(bitmap)
             setupFiltersList(bitmap)
         }
     }
@@ -89,7 +89,6 @@ class EditActivity : AppCompatActivity() {
         binding.rvFilters.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvFilters.adapter = adapter
-        // تحديد الفلتر الحالي
         adapter.setSelectedFilter(editorState.filter)
     }
 
@@ -191,7 +190,6 @@ class EditActivity : AppCompatActivity() {
             schedulePreviewUpdate()
         }
         binding.btnCrop.setOnClickListener {
-            // نمرّر Uri الإدخال الأصلي + حالة المحرر لشاشة القص
             val intent = Intent(this, CropActivity::class.java).apply {
                 putExtra(CropActivity.EXTRA_INPUT_URI, this@EditActivity.intent.getStringExtra(EXTRA_INPUT_URI))
                 putExtra(CropActivity.EXTRA_STATE, editorState)
@@ -205,7 +203,12 @@ class EditActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == android.app.Activity.RESULT_OK) {
             val data = result.data ?: return@registerForActivityResult
-            val cropRect = data.getParcelableExtra<android.graphics.Rect>(CropActivity.RESULT_CROP_RECT)
+            val cropRect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                data.getParcelableExtra(CropActivity.RESULT_CROP_RECT, android.graphics.Rect::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                data.getParcelableExtra<android.graphics.Rect>(CropActivity.RESULT_CROP_RECT)
+            }
             if (cropRect != null && sourceBitmap != null) {
                 lifecycleScope.launch {
                     showProgress(true)
@@ -214,7 +217,8 @@ class EditActivity : AppCompatActivity() {
                     }
                     sourceBitmap = cropped
                     binding.ivPreview.setImageBitmap(cropped)
-                    binding.ivOriginal.setImageBitmap(cropped)
+                    binding.beforeAfterView.setBeforeBitmap(cropped)
+                    binding.beforeAfterView.setAfterBitmap(cropped)
                     (binding.rvFilters.adapter as? FilterAdapter)?.release()
                     setupFiltersList(cropped)
                     showProgress(false)
@@ -223,32 +227,42 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupCompareTouch() {
-        binding.ivPreview.setOnLongClickListener {
-            isComparing = true
-            binding.ivOriginal.visibility = View.VISIBLE
-            binding.tvCompareLabel.visibility = View.VISIBLE
-            true
-        }
-        binding.ivPreview.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-                if (isComparing) {
-                    isComparing = false
-                    binding.ivOriginal.visibility = View.GONE
-                    binding.tvCompareLabel.visibility = View.GONE
-                }
+    private fun setupCompareButton() {
+        binding.fabCompare.setOnClickListener {
+            compareMode = !compareMode
+            if (compareMode) {
+                // إظهار before/after view
+                binding.ivPreview.visibility = View.GONE
+                binding.beforeAfterView.visibility = View.VISIBLE
+                binding.tvModeLabel.text = "اسحب للمقارنة"
+                binding.tvModeLabel.visibility = View.VISIBLE
+                // تأكد من وجود afterBitmap محدّث
+                updatePreviewForComparison()
+            } else {
+                binding.ivPreview.visibility = View.VISIBLE
+                binding.beforeAfterView.visibility = View.GONE
+                binding.tvModeLabel.text = "اضغط للمقارنة"
+                binding.tvModeLabel.visibility = View.VISIBLE
             }
-            false
         }
     }
 
-    /**
-     * يجدول تحديث المعاينة بعد 150ms لتقليل المعالجة أثناء تحريك الـ slider.
-     */
+    private fun updatePreviewForComparison() {
+        val src = sourceBitmap ?: return
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                try { ImageProcessor.processFull(src, editorState) } catch (e: Exception) { null }
+            }
+            if (result != null) {
+                binding.beforeAfterView.setAfterBitmap(result)
+            }
+        }
+    }
+
     private fun schedulePreviewUpdate() {
         previewJob?.cancel()
         previewJob = lifecycleScope.launch {
-            delay(150)
+            delay(120)  // تقليل التأخير للاستجابة الأسرع
             updatePreview()
         }
     }
@@ -259,20 +273,17 @@ class EditActivity : AppCompatActivity() {
         processingJob?.cancel()
         processingJob = lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
-                try {
-                    ImageProcessor.processFull(src, editorState)
-                } catch (e: Exception) {
-                    null
-                }
+                try { ImageProcessor.processFull(src, editorState) } catch (e: Exception) { null }
             }
             showProgress(false)
             if (result != null) {
                 binding.ivPreview.setImageBitmap(result)
+                if (compareMode) {
+                    binding.beforeAfterView.setAfterBitmap(result)
+                }
             }
         }
     }
-
-    private fun getCurrentBitmap(): Bitmap? = sourceBitmap
 
     private fun showProgress(show: Boolean) {
         binding.progress.visibility = if (show) View.VISIBLE else View.GONE
@@ -289,14 +300,7 @@ class EditActivity : AppCompatActivity() {
             R.id.action_save -> { saveImage(); true }
             R.id.action_share -> { shareImage(); true }
             R.id.action_compare -> {
-                // مقارنة بالنقر على العنصر
-                if (binding.ivOriginal.visibility == View.VISIBLE) {
-                    binding.ivOriginal.visibility = View.GONE
-                    binding.tvCompareLabel.visibility = View.GONE
-                } else {
-                    binding.ivOriginal.visibility = View.VISIBLE
-                    binding.tvCompareLabel.visibility = View.VISIBLE
-                }
+                binding.fabCompare.performClick()
                 true
             }
             R.id.action_reset -> { resetAll(); true }
@@ -306,7 +310,6 @@ class EditActivity : AppCompatActivity() {
 
     private fun resetAll() {
         editorState = EditorState()
-        // إعادة تعيين الـ sliders
         binding.sliderBrightness.slider.value = 0f
         binding.sliderContrast.slider.value = 0f
         binding.sliderSaturation.slider.value = 0f
@@ -317,11 +320,10 @@ class EditActivity : AppCompatActivity() {
         binding.sliderSharpness.slider.value = 0f
         binding.sliderVignette.slider.value = 0f
         binding.sliderGrain.slider.value = 0f
-        // إعادة تعيين الفلاتر
         (binding.rvFilters.adapter as? FilterAdapter)?.setSelectedFilter(FilterType.NONE)
-        // إعادة الصورة الأصلية
         sourceBitmap?.let {
             binding.ivPreview.setImageBitmap(it)
+            binding.beforeAfterView.setAfterBitmap(it)
         }
         Snackbar.make(binding.root, "تمت إعادة التعيين", Snackbar.LENGTH_SHORT).show()
     }
@@ -331,9 +333,7 @@ class EditActivity : AppCompatActivity() {
         showProgress(true)
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
-                try {
-                    ImageProcessor.processFull(src, editorState)
-                } catch (e: Exception) { null }
+                try { ImageProcessor.processFull(src, editorState) } catch (e: Exception) { null }
             }
             if (result == null) {
                 showProgress(false)

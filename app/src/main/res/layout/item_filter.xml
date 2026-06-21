@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="@dimen/spacing_xs">
+    android:padding="4dp">
 
     <FrameLayout
-        android:layout_width="@dimen/filter_preview_size"
-        android:layout_height="@dimen/filter_preview_size">
+        android:layout_width="88dp"
+        android:layout_height="88dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_preview"
@@ -17,13 +17,15 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:background="@color/brand_outline"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.FilterPreview" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.FilterPreview"
+            android:elevation="2dp" />
 
         <View
             android:id="@+id/view_selected"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bg_filter_selected"
+            android:elevation="3dp"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -31,11 +33,11 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xs"
+        android:layout_marginTop="6dp"
         android:text="الأصلي"
         android:textAppearance="@style/TextAppearance.App.Caption"
         android:textSize="12sp"
-        android:maxEms="6"
+        android:maxEms="8"
         android:maxLines="1"
         android:ellipsize="end" />
 </LinearLayout>
