@@ -2,23 +2,39 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_undo"
+        android:title="@string/action_undo"
+        android:icon="@drawable/ic_undo"
+        app:showAsAction="ifRoom"
+        app:iconTint="@color/brand_text_primary" />
+    <item
+        android:id="@+id/action_redo"
+        android:title="@string/action_redo"
+        android:icon="@drawable/ic_redo"
+        app:showAsAction="ifRoom"
+        app:iconTint="@color/brand_text_primary" />
+    <item
+        android:id="@+id/action_presets"
+        android:title="@string/presets_title"
+        android:icon="@drawable/ic_presets"
+        app:showAsAction="ifRoom"
+        app:iconTint="@color/brand_text_primary" />
+    <item
         android:id="@+id/action_compare"
         android:title="@string/action_compare"
         android:icon="@drawable/ic_compare"
         app:showAsAction="ifRoom"
-        app:iconTint="@color/brand_text" />
+        app:iconTint="@color/brand_text_primary" />
     <item
         android:id="@+id/action_reset"
         android:title="@string/action_reset"
         android:icon="@drawable/ic_reset"
-        app:showAsAction="ifRoom"
-        app:iconTint="@color/brand_text" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_share"
         android:title="@string/action_share"
         android:icon="@drawable/ic_share"
-        app:showAsAction="ifRoom"
-        app:iconTint="@color/brand_text" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_save"
         android:title="@string/action_save"

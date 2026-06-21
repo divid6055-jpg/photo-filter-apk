@@ -10,15 +10,20 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.photofilter.pro.adapters.FilterAdapter
+import com.photofilter.pro.adapters.PresetAdapter
 import com.photofilter.pro.databinding.ActivityEditBinding
+import com.photofilter.pro.databinding.BottomSheetPresetsBinding
 import com.photofilter.pro.databinding.ItemSliderBinding
 import com.photofilter.pro.utils.AdjustSettings
 import com.photofilter.pro.utils.EditorState
 import com.photofilter.pro.utils.FilterType
+import com.photofilter.pro.utils.HistoryManager
 import com.photofilter.pro.utils.ImageProcessor
 import com.photofilter.pro.utils.ImageUtils
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +35,7 @@ import kotlinx.coroutines.withContext
 class EditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditBinding
+    private lateinit var historyManager: HistoryManager
 
     private var sourceBitmap: Bitmap? = null
     private var editorState: EditorState = EditorState()
@@ -37,11 +43,14 @@ class EditActivity : AppCompatActivity() {
 
     private var processingJob: Job? = null
     private var previewJob: Job? = null
+    private var isUndoRedoing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        historyManager = HistoryManager()
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -78,11 +87,15 @@ class EditActivity : AppCompatActivity() {
             binding.beforeAfterView.setBeforeBitmap(bitmap)
             binding.beforeAfterView.setAfterBitmap(bitmap)
             setupFiltersList(bitmap)
+            // حفظ الحالة الأولية
+            historyManager.setCurrentState(editorState)
+            updateUndoRedoIcons()
         }
     }
 
     private fun setupFiltersList(bitmap: Bitmap) {
         val adapter = FilterAdapter(bitmap) { filter ->
+            pushHistory()
             editorState = editorState.copy(filter = filter)
             schedulePreviewUpdate()
         }
@@ -121,9 +134,38 @@ class EditActivity : AppCompatActivity() {
         sliderBinding.slider.addOnChangeListener { _, value, fromUser ->
             if (!fromUser) return@addOnChangeListener
             sliderBinding.tvValue.text = value.toInt().toString()
+            // حفظ في السجل عند توقف التحريك (نستخدم debounce)
+            scheduleHistoryPush()
             updateAdjustSettings()
             schedulePreviewUpdate()
         }
+    }
+
+    private var historyPushJob: Job? = null
+    private fun scheduleHistoryPush() {
+        if (isUndoRedoing) return
+        historyPushJob?.cancel()
+        historyPushJob = lifecycleScope.launch {
+            delay(800) // انتظر توقف المستخدم عن التحريك
+            pushHistory()
+        }
+    }
+
+    private fun pushHistory() {
+        if (isUndoRedoing) return
+        historyManager.pushState(editorState)
+        updateUndoRedoIcons()
+    }
+
+    private fun updateUndoRedoIcons() {
+        // تفعيل/تعطيل أيقونات undo/redo
+        val undoItem = binding.toolbar.menu.findItem(R.id.action_undo)
+        val redoItem = binding.toolbar.menu.findItem(R.id.action_redo)
+        undoItem?.isEnabled = historyManager.canUndo()
+        redoItem?.isEnabled = historyManager.canRedo()
+        // تقليل opacity للمعطّل
+        undoItem?.icon?.alpha = if (historyManager.canUndo()) 255 else 100
+        redoItem?.icon?.alpha = if (historyManager.canRedo()) 255 else 100
     }
 
     private fun updateAdjustSettings() {
@@ -174,18 +216,22 @@ class EditActivity : AppCompatActivity() {
 
     private fun setupTransformButtons() {
         binding.btnRotateLeft.setOnClickListener {
+            pushHistory()
             editorState = editorState.copy(rotationDegrees = (editorState.rotationDegrees - 90 + 360) % 360)
             schedulePreviewUpdate()
         }
         binding.btnRotateRight.setOnClickListener {
+            pushHistory()
             editorState = editorState.copy(rotationDegrees = (editorState.rotationDegrees + 90) % 360)
             schedulePreviewUpdate()
         }
         binding.btnFlipH.setOnClickListener {
+            pushHistory()
             editorState = editorState.copy(flipHorizontal = !editorState.flipHorizontal)
             schedulePreviewUpdate()
         }
         binding.btnFlipV.setOnClickListener {
+            pushHistory()
             editorState = editorState.copy(flipVertical = !editorState.flipVertical)
             schedulePreviewUpdate()
         }
@@ -231,12 +277,10 @@ class EditActivity : AppCompatActivity() {
         binding.fabCompare.setOnClickListener {
             compareMode = !compareMode
             if (compareMode) {
-                // إظهار before/after view
                 binding.ivPreview.visibility = View.GONE
                 binding.beforeAfterView.visibility = View.VISIBLE
                 binding.tvModeLabel.text = "اسحب للمقارنة"
                 binding.tvModeLabel.visibility = View.VISIBLE
-                // تأكد من وجود afterBitmap محدّث
                 updatePreviewForComparison()
             } else {
                 binding.ivPreview.visibility = View.VISIBLE
@@ -262,7 +306,7 @@ class EditActivity : AppCompatActivity() {
     private fun schedulePreviewUpdate() {
         previewJob?.cancel()
         previewJob = lifecycleScope.launch {
-            delay(120)  // تقليل التأخير للاستجابة الأسرع
+            delay(120)
             updatePreview()
         }
     }
@@ -299,28 +343,91 @@ class EditActivity : AppCompatActivity() {
             android.R.id.home -> { finish(); true }
             R.id.action_save -> { saveImage(); true }
             R.id.action_share -> { shareImage(); true }
-            R.id.action_compare -> {
-                binding.fabCompare.performClick()
-                true
-            }
+            R.id.action_compare -> { binding.fabCompare.performClick(); true }
             R.id.action_reset -> { resetAll(); true }
+            R.id.action_undo -> { performUndo(); true }
+            R.id.action_redo -> { performRedo(); true }
+            R.id.action_presets -> { showPresetsSheet(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    private fun performUndo() {
+        val newState = historyManager.undo()
+        if (newState != null) {
+            isUndoRedoing = true
+            editorState = newState
+            syncUIFromState()
+            updateUndoRedoIcons()
+            schedulePreviewUpdate()
+            // السماح بدفع السجل مرة أخرى بعد فترة
+            lifecycleScope.launch {
+                delay(500)
+                isUndoRedoing = false
+            }
+        } else {
+            Snackbar.make(binding.root, getString(R.string.msg_no_undo), Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun performRedo() {
+        val newState = historyManager.redo()
+        if (newState != null) {
+            isUndoRedoing = true
+            editorState = newState
+            syncUIFromState()
+            updateUndoRedoIcons()
+            schedulePreviewUpdate()
+            lifecycleScope.launch {
+                delay(500)
+                isUndoRedoing = false
+            }
+        } else {
+            Snackbar.make(binding.root, getString(R.string.msg_no_redo), Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    /** يحدّث الـ UI من editorState (للتراجع/الإعادة) */
+    private fun syncUIFromState() {
+        binding.sliderBrightness.slider.value = editorState.adjust.brightness
+        binding.sliderContrast.slider.value = editorState.adjust.contrast
+        binding.sliderSaturation.slider.value = editorState.adjust.saturation
+        binding.sliderWarmth.slider.value = editorState.adjust.warmth
+        binding.sliderExposure.slider.value = editorState.adjust.exposure
+        binding.sliderHighlights.slider.value = editorState.adjust.highlights
+        binding.sliderShadows.slider.value = editorState.adjust.shadows
+        binding.sliderSharpness.slider.value = editorState.adjust.sharpness
+        binding.sliderVignette.slider.value = editorState.adjust.vignette
+        binding.sliderGrain.slider.value = editorState.adjust.grain
+        (binding.rvFilters.adapter as? FilterAdapter)?.setSelectedFilter(editorState.filter)
+    }
+
+    private fun showPresetsSheet() {
+        val dialog = BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
+        val binding = BottomSheetPresetsBinding.inflate(layoutInflater)
+        dialog.setContentView(binding.root)
+
+        binding.rvPresets.layoutManager = GridLayoutManager(this, 1)
+        val adapter = PresetAdapter { preset ->
+            pushHistory()
+            editorState = editorState.copy(
+                filter = preset.filter,
+                adjust = preset.adjust
+            )
+            syncUIFromState()
+            schedulePreviewUpdate()
+            dialog.dismiss()
+            Snackbar.make(this.binding.root, "تم تطبيق: ${getString(preset.displayNameRes)}", Snackbar.LENGTH_SHORT).show()
+        }
+        binding.rvPresets.adapter = adapter
+
+        dialog.show()
+    }
+
     private fun resetAll() {
+        pushHistory()
         editorState = EditorState()
-        binding.sliderBrightness.slider.value = 0f
-        binding.sliderContrast.slider.value = 0f
-        binding.sliderSaturation.slider.value = 0f
-        binding.sliderWarmth.slider.value = 0f
-        binding.sliderExposure.slider.value = 0f
-        binding.sliderHighlights.slider.value = 0f
-        binding.sliderShadows.slider.value = 0f
-        binding.sliderSharpness.slider.value = 0f
-        binding.sliderVignette.slider.value = 0f
-        binding.sliderGrain.slider.value = 0f
-        (binding.rvFilters.adapter as? FilterAdapter)?.setSelectedFilter(FilterType.NONE)
+        syncUIFromState()
         sourceBitmap?.let {
             binding.ivPreview.setImageBitmap(it)
             binding.beforeAfterView.setAfterBitmap(it)
@@ -390,6 +497,7 @@ class EditActivity : AppCompatActivity() {
         (binding.rvFilters.adapter as? FilterAdapter)?.release()
         processingJob?.cancel()
         previewJob?.cancel()
+        historyPushJob?.cancel()
     }
 
     companion object {
