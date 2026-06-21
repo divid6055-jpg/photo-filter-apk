@@ -1,8 +1,16 @@
 import java.util.Properties
+import java.io.File
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+// قراءة إعدادات التوقيع من keystore.properties (لو موجود)
+val keystorePropertiesFile = File(rootDir, "keystore.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
 android {
@@ -22,6 +30,30 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            // يعمل محلياً (من keystore.properties) وفي CI (من environment variables)
+            val storeFilePath = System.getenv("SIGNING_KEYSTORE_FILE")
+            val storeBase64 = System.getenv("SIGNING_KEYSTORE_BASE64")
+            if (!storeFilePath.isNullOrBlank()) {
+                storeFile = File(storeFilePath)
+            } else if (!storeBase64.isNullOrBlank()) {
+                // فك base64 واكتب لملف مؤقت
+                val tmpFile = File.createTempFile("release-keystore", ".jks")
+                tmpFile.writeBytes(java.util.Base64.getDecoder().decode(storeBase64))
+                storeFile = tmpFile
+            } else if (keystoreProperties.containsKey("storeFile")) {
+                storeFile = File(keystoreProperties.getProperty("storeFile"))
+            }
+            storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
+                ?: keystoreProperties.getProperty("storePassword") ?: ""
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                ?: keystoreProperties.getProperty("keyAlias") ?: ""
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+                ?: keystoreProperties.getProperty("keyPassword") ?: ""
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -29,6 +61,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // توقيع الـ release APK لو توفّرت المفاتيح
+            val hasSigning = (System.getenv("SIGNING_KEYSTORE_BASE64") != null ||
+                    System.getenv("SIGNING_KEYSTORE_FILE") != null ||
+                    keystoreProperties.containsKey("storeFile"))
+            if (hasSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         debug {
             isMinifyEnabled = false

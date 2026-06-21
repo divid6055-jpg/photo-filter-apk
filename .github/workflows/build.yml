@@ -44,8 +44,23 @@ jobs:
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --stacktrace
 
-      - name: Build Release APK
+      - name: Build Signed Release APK
+        env:
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Rename Release APK
+        run: |
+          mkdir -p app/build/outputs/apk/release/signed
+          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
+            mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/signed/PhotoFilterPro-v${{ github.run_number }}.apk
+          elif [ -f app/build/outputs/apk/release/app-release-unsigned.apk ]; then
+            mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/signed/PhotoFilterPro-unsigned-v${{ github.run_number }}.apk
+          fi
+          ls -la app/build/outputs/apk/release/signed/ || true
 
       - name: List built APKs
         run: |
@@ -64,7 +79,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: photo-filter-release-apk
-          path: app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/release/signed/*.apk
           retention-days: 30
           if-no-files-found: warn
 
@@ -90,8 +105,23 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Build Release APK
+      - name: Build Signed Release APK
+        env:
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Rename Release APK
+        run: |
+          mkdir -p app/build/outputs/apk/release/signed
+          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
+            mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/signed/PhotoFilterPro-v${{ github.run_number }}.apk
+          elif [ -f app/build/outputs/apk/release/app-release-unsigned.apk ]; then
+            mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/signed/PhotoFilterPro-unsigned-v${{ github.run_number }}.apk
+          fi
+          ls -la app/build/outputs/apk/release/signed/
 
       - name: Generate version tag
         id: version
@@ -104,7 +134,7 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.name }}
-          files: app/build/outputs/apk/release/*.apk
+          files: app/build/outputs/apk/release/signed/*.apk
           body: |
             # PhotoFilter Pro - ${{ steps.version.outputs.name }}
 
@@ -119,9 +149,10 @@ jobs:
             - حفظ ومشاركة مباشرة
 
             ## التثبيت
-            1. نزّل ملف APK
-            2. فعّل "تثبيت تطبيقات من مصادر غير معروفة" في إعدادات أندرويد
-            3. افتح ملف APK واتبع التعليمات
+            1. نزّل ملف APK (النسخة الموقّعة باسم PhotoFilterPro-vX.apk)
+            2. افتح ملف APK
+            3. إذا ظهرت رسالة "تطبيق غير معروف" اضغط "تثبيت" مباشرة - فهو موقّع
+            4. في حال رفض أندرويد التثبيت: الإعدادات → التطبيقات → وصول خاص → تثبيت تطبيقات غير معروفة ← اختر المتصفح وفعّل
           draft: false
           prerelease: false
         env:
