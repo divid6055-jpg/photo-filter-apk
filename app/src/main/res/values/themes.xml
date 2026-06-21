@@ -1,90 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base theme - Material Design 3 -->
+    <!-- ==================== Base Theme - Material 3 محسّن ==================== -->
     <style name="Theme.PhotoFilterPro" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- الألوان الأساسية -->
         <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorPrimaryVariant">@color/brand_primary_dark</item>
         <item name="colorOnPrimary">@color/brand_on_primary</item>
         <item name="colorSecondary">@color/brand_secondary</item>
-        <item name="colorOnSecondary">@color/brand_on_primary</item>
+        <item name="colorOnSecondary">@color/brand_on_secondary</item>
         <item name="colorAccent">@color/brand_accent</item>
 
+        <!-- الخلفيات -->
         <item name="android:colorBackground">@color/brand_background</item>
-        <item name="android:textColor">@color/brand_text</item>
+        <item name="colorSurface">@color/brand_surface</item>
+        <item name="colorSurfaceVariant">@color/brand_surface_variant</item>
+        <item name="colorOnSurface">@color/brand_text_primary</item>
+
+        <!-- النصوص -->
+        <item name="android:textColorPrimary">@color/brand_text_primary</item>
         <item name="android:textColorSecondary">@color/brand_text_secondary</item>
+        <item name="android:textColor">@color/brand_text_primary</item>
 
-        <item name="android:statusBarColor">@color/brand_background</item>
-        <item name="android:navigationBarColor">@color/brand_background</item>
+        <!-- شريط الحالة -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
 
+        <!-- الحركات والانتقالات -->
+        <item name="android:windowAnimationStyle">@style/Animation.PhotoFilterPro</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- شكل العناصر -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.App.Large</item>
+
+        <!-- AlertDialog -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
 
-    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog" />
+    <!-- ==================== Splash Theme ==================== -->
+    <style name="Theme.PhotoFilterPro.Splash" parent="Theme.PhotoFilterPro">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
 
-    <!-- Tab style -->
+    <!-- ==================== Animations ==================== -->
+    <style name="Animation.PhotoFilterPro" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_slide_out_right</item>
+    </style>
+
+    <!-- ==================== Shape Appearances ==================== -->
+    <style name="ShapeAppearance.App.Small" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="ShapeAppearance.App.Medium" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    <style name="ShapeAppearance.App.Large" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item>
+    </style>
+    <style name="ShapeAppearance.App.Hero" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">32dp</item>
+    </style>
+    <style name="ShapeAppearance.FilterPreview" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">14dp</item>
+    </style>
+
+    <!-- ==================== Tab Layout ==================== -->
     <style name="Widget.App.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabIndicatorColor">@color/brand_primary</item>
+        <item name="tabIndicatorAnimationMode">elastic</item>
         <item name="tabSelectedTextColor">@color/brand_primary</item>
         <item name="tabTextColor">@color/brand_text_secondary</item>
         <item name="tabMode">fixed</item>
         <item name="tabGravity">fill</item>
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+        <item name="tabTextAppearance">@style/TextAppearance.App.Tab</item>
+        <item name="tabIndicatorFullWidth">false</item>
     </style>
 
-    <!-- Slider value style hidden -->
+    <!-- ==================== Slider ==================== -->
     <style name="Widget.App.Slider" parent="Widget.Material3.Slider">
         <item name="thumbColor">@color/brand_primary</item>
+        <item name="thumbElevation">8dp</item>
         <item name="trackColorActive">@color/brand_primary</item>
         <item name="trackColorInactive">@color/brand_outline</item>
+        <item name="haloColor">#33FF6B35</item>
         <item name="labelBehavior">gone</item>
+        <item name="tickVisible">false</item>
     </style>
 
-    <!-- Bottom Sheet style -->
+    <!-- ==================== Bottom Sheet ==================== -->
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.App.BottomSheet</item>
+    </style>
     <style name="Widget.App.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
         <item name="backgroundTint">@color/brand_surface</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.Large</item>
     </style>
 
-    <!-- Button styles -->
+    <!-- ==================== Buttons ==================== -->
     <style name="Widget.App.Button.Primary" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/brand_primary</item>
+        <item name="backgroundTint">@drawable/btn_primary_background</item>
         <item name="android:textColor">@color/brand_on_primary</item>
-        <item name="cornerRadius">16dp</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:stateListAnimator">@animator/button_elevation</item>
+        <item name="elevation">4dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/brand_primary</item>
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="cornerRadius">20dp</item>
         <item name="android:minHeight">56dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Widget.App.Button.Icon" parent="Widget.Material3.Button.IconButton.Filled">
-        <item name="backgroundTint">@color/brand_surface</item>
-        <item name="iconTint">@color/brand_text</item>
-        <item name="android:textColor">@color/brand_text</item>
+        <item name="backgroundTint">@color/brand_surface_variant</item>
+        <item name="iconTint">@color/brand_text_primary</item>
+        <item name="android:textColor">@color/brand_text_primary</item>
     </style>
 
-    <!-- Toolbar -->
+    <style name="Widget.App.Button.Floating" parent="Widget.Material3.FloatingActionButton">
+        <item name="backgroundTint">@color/brand_primary</item>
+        <item name="tint">@color/white</item>
+        <item name="elevation">8dp</item>
+    </style>
+
+    <!-- ==================== Toolbar ==================== -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
-        <item name="android:background">@color/brand_background</item>
-        <item name="titleTextColor">@color/brand_text</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="titleTextColor">@color/brand_text_primary</item>
         <item name="subtitleTextColor">@color/brand_text_secondary</item>
-        <item name="navigationIconTint">@color/brand_text</item>
+        <item name="navigationIconTint">@color/brand_text_primary</item>
+        <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
     </style>
 
-    <!-- Card -->
+    <!-- ==================== Card View ==================== -->
     <style name="Widget.App.CardView" parent="Widget.Material3.CardView.Elevated">
         <item name="cardBackgroundColor">@color/brand_surface</item>
-        <item name="cardCornerRadius">16dp</item>
+        <item name="cardCornerRadius">24dp</item>
         <item name="cardElevation">2dp</item>
+        <item name="strokeWidth">0dp</item>
     </style>
 
-    <!-- Text Appearance -->
-    <style name="TextAppearance.App.Headline" parent="TextAppearance.Material3.HeadlineSmall">
-        <item name="android:textColor">@color/brand_text</item>
+    <style name="Widget.App.CardView.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/brand_surface</item>
+        <item name="cardCornerRadius">24dp</item>
+        <item name="strokeColor">@color/brand_outline</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- ==================== Text Appearances ==================== -->
+    <style name="TextAppearance.App.Hero" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:textColor">@color/brand_text_primary</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <style name="TextAppearance.App.Headline" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/brand_text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
     </style>
 
     <style name="TextAppearance.App.Title" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textColor">@color/brand_text</item>
+        <item name="android:textColor">@color/brand_text_primary</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/brand_text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
     </style>
 
     <style name="TextAppearance.App.Body" parent="TextAppearance.Material3.BodyMedium">
@@ -95,12 +206,32 @@
         <item name="android:textColor">@color/brand_text_secondary</item>
     </style>
 
-    <!-- Filter chip -->
+    <style name="TextAppearance.App.Tab" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- ==================== Filter Chip ==================== -->
     <style name="Widget.App.FilterChip" parent="Widget.Material3.Chip.Filter">
         <item name="chipBackgroundColor">@color/brand_surface</item>
         <item name="chipStrokeColor">@color/brand_outline</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="android:textColor">@color/brand_text</item>
+    </style>
+
+    <!-- ==================== AlertDialog ==================== -->
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.DialogButton.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.DialogButton.Negative</item>
+    </style>
+
+    <style name="Widget.App.DialogButton.Positive" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Widget.App.DialogButton.Negative" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/brand_text_secondary</item>
     </style>
 
 </resources>

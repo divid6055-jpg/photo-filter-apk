@@ -1,27 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand Colors - Warm photo-editor palette (no blue/indigo) -->
-    <color name="brand_primary">#E85D2A</color>
-    <color name="brand_primary_dark">#B8431A</color>
-    <color name="brand_secondary">#F4A261</color>
-    <color name="brand_accent">#FFB627</color>
-    <color name="brand_surface">#FAFAF7</color>
-    <color name="brand_background">#F5F2EE</color>
+    <!-- ==================== Brand Colors - عصرية احترافية ==================== -->
+    <!-- اللون الأساسي: برتقالي ناري متدرّج (مثل Sunset) -->
+    <color name="brand_primary">#FF6B35</color>
+    <color name="brand_primary_dark">#E8541F</color>
+    <color name="brand_primary_light">#FF8C5A</color>
+
+    <!-- اللون الثانوي: بنفسجي/وردي دافئ -->
+    <color name="brand_secondary">#E91E63</color>
+    <color name="brand_secondary_dark">#AD1457</color>
+
+    <!-- لون التمييز: ذهبي لامع -->
+    <color name="brand_accent">#FFD23F</color>
+    <color name="brand_accent_dark">#FFA500</color>
+
+    <!-- خلفيات السطح الفاتح -->
+    <color name="brand_background">#FAF8F5</color>
+    <color name="brand_background_gradient_start">#FFFFFF</color>
+    <color name="brand_background_gradient_end">#F5F0E8</color>
+    <color name="brand_surface">#FFFFFF</color>
+    <color name="brand_surface_variant">#F5F2EE</color>
+    <color name="brand_surface_elevated">#FFFFFF</color>
+
+    <!-- النصوص والخطوط -->
     <color name="brand_on_primary">#FFFFFF</color>
-    <color name="brand_text">#1F1B16</color>
-    <color name="brand_text_secondary">#6B6258</color>
-    <color name="brand_outline">#D9D2C5</color>
+    <color name="brand_on_secondary">#FFFFFF</color>
+    <color name="brand_text_primary">#1A1714</color>
+    <color name="brand_text_secondary">#6B5D54</color>
+    <color name="brand_text_disabled">#B5ABA1</color>
+    <color name="brand_outline">#E5DDD2</color>
+    <color name="brand_outline_variant">#D9D2C5</color>
 
-    <!-- Dark theme -->
-    <color name="brand_dark_surface">#1A1714</color>
-    <color name="brand_dark_background">#0E0C0A</color>
-    <color name="brand_dark_text">#F5F2EE</color>
+    <!-- ==================== Dark Theme ==================== -->
+    <color name="brand_dark_background">#0E0B08</color>
+    <color name="brand_dark_background_gradient_start">#1A1410</color>
+    <color name="brand_dark_background_gradient_end">#0E0B08</color>
+    <color name="brand_dark_surface">#1A1410</color>
+    <color name="brand_dark_surface_variant">#261E18</color>
+    <color name="brand_dark_surface_elevated">#2B2218</color>
+    <color name="brand_dark_text_primary">#F8F4EE</color>
     <color name="brand_dark_text_secondary">#A89E91</color>
-    <color name="brand_dark_outline">#3A332A</color>
+    <color name="brand_dark_text_disabled">#5A5048</color>
+    <color name="brand_dark_outline">#3D332A</color>
+    <color name="brand_dark_outline_variant">#2D261E</color>
 
-    <!-- Common -->
+    <!-- ==================== Accent Gradients ==================== -->
+    <color name="gradient_sunset_start">#FF6B35</color>
+    <color name="gradient_sunset_mid">#F7931E</color>
+    <color name="gradient_sunset_end">#FFD23F</color>
+
+    <color name="gradient_rose_start">#E91E63</color>
+    <color name="gradient_rose_end">#FF6B35</color>
+
+    <color name="gradient_ocean_start">#00897B</color>
+    <color name="gradient_ocean_end">#00ACC1</color>
+
+    <!-- ==================== Status Colors ==================== -->
+    <color name="success">#2E7D32</color>
+    <color name="warning">#F57F17</color>
+    <color name="error">#C62828</color>
+    <color name="info">#1976D2</color>
+
+    <!-- ==================== Common ==================== -->
     <color name="white">#FFFFFFFF</color>
+    <color name="white_alpha_70">#B3FFFFFF</color>
+    <color name="white_alpha_30">#4DFFFFFF</color>
+    <color name="white_alpha_10">#1AFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="transparent">#00000000</color>
     <color name="scrim">#99000000</color>
+    <color name="scrim_light">#66000000</color>
+
+    <!-- ==================== Editor UI ==================== -->
+    <color name="editor_canvas">#0A0A0A</color>
+    <color name="editor_panel_light">#FFFFFF</color>
+    <color name="editor_panel_dark">#1A1410</color>
+    <color name="editor_grid">#33FFFFFF</color>
+    <color name="crop_handle">#FFFFFF</color>
+    <color name="crop_border">#FF6B35</color>
 </resources>
