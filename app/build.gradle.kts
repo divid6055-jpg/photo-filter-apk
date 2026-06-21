@@ -34,14 +34,8 @@ android {
         create("release") {
             // يعمل محلياً (من keystore.properties) وفي CI (من environment variables)
             val storeFilePath = System.getenv("SIGNING_KEYSTORE_FILE")
-            val storeBase64 = System.getenv("SIGNING_KEYSTORE_BASE64")
-            if (!storeFilePath.isNullOrBlank()) {
+            if (!storeFilePath.isNullOrBlank() && File(storeFilePath).exists()) {
                 storeFile = File(storeFilePath)
-            } else if (!storeBase64.isNullOrBlank()) {
-                // فك base64 واكتب لملف مؤقت
-                val tmpFile = File.createTempFile("release-keystore", ".jks")
-                tmpFile.writeBytes(java.util.Base64.getDecoder().decode(storeBase64))
-                storeFile = tmpFile
             } else if (keystoreProperties.containsKey("storeFile")) {
                 storeFile = File(keystoreProperties.getProperty("storeFile"))
             }
