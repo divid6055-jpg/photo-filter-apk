@@ -105,14 +105,14 @@ class CropActivity : AppCompatActivity() {
         binding.cropOverlay.setImageDisplayRect(rect)
     }
 
-    private val aspectButtons by lazy {
+    private val aspectButtons: List<Pair<MaterialButton, Float>> by lazy {
         listOf(
             Pair(binding.btnAspectFree, 0f),
-            Pair(binding.btnAspect1_1, 1f),
-            Pair(binding.btnAspect4_3, 4f / 3f),
-            Pair(binding.btnAspect3_4, 3f / 4f),
-            Pair(binding.btnAspect16_9, 16f / 9f),
-            Pair(binding.btnAspect9_16, 9f / 16f)
+            Pair(binding.btnAspectSquare, 1f),
+            Pair(binding.btnAspectLandscape, 4f / 3f),
+            Pair(binding.btnAspectPortrait, 3f / 4f),
+            Pair(binding.btnAspectWide, 16f / 9f),
+            Pair(binding.btnAspectTall, 9f / 16f)
         )
     }
 
@@ -126,7 +126,7 @@ class CropActivity : AppCompatActivity() {
                         androidx.core.content.ContextCompat.getColor(this, R.color.brand_dark_outline)
                     )
                 }
-                (btn as MaterialButton).backgroundTintList = android.content.res.ColorStateList.valueOf(
+                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(
                     androidx.core.content.ContextCompat.getColor(this, R.color.brand_primary)
                 )
             }

@@ -1,5 +1,7 @@
 package com.photofilter.pro.utils
 
+import java.io.Serializable
+
 /**
  * تعريفات الفلاتر المتاحة في التطبيق
  * كل فلتر له اسم العرض (المترجم) ومعرف فريد
@@ -44,7 +46,7 @@ data class AdjustSettings(
     val shadows: Float = 0f,           // -100 .. 100
     val vignette: Float = 0f,          // 0 .. 100
     val grain: Float = 0f              // 0 .. 100
-) {
+) : Serializable {
     val isDefault: Boolean
         get() = brightness == 0f && contrast == 0f && saturation == 0f && warmth == 0f &&
                 sharpness == 0f && exposure == 0f && highlights == 0f && shadows == 0f &&
@@ -64,7 +66,7 @@ data class EditorState(
     val rotationDegrees: Int = 0,        // 0, 90, 180, 270
     val flipHorizontal: Boolean = false,
     val flipVertical: Boolean = false
-) {
+) : Serializable {
     val isDefault: Boolean
         get() = filter == FilterType.NONE && adjust.isDefault &&
                 rotationDegrees == 0 && !flipHorizontal && !flipVertical
