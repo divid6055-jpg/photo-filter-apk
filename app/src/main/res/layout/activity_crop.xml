@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="@color/white"
+        app:titleTextColor="@color/white"
+        app:title="@string/tab_crop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- منطقة عرض الصورة مع إطار القص -->
+    <FrameLayout
+        android:id="@+id/crop_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/layout_aspects"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:contentDescription="صورة للقص" />
+
+        <com.photofilter.pro.ui.CropOverlayView
+            android:id="@+id/crop_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- أزرار نسبة العرض -->
+    <LinearLayout
+        android:id="@+id/layout_aspects"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/brand_dark_surface"
+        android:padding="@dimen/spacing_sm"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/layout_actions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aspect_free"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/crop_aspect_free"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:minHeight="40dp"
+            app:backgroundTint="@color/brand_primary"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aspect_1_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            android:text="@string/crop_aspect_1_1"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:minHeight="40dp"
+            app:backgroundTint="@color/brand_dark_outline"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aspect_4_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            android:text="@string/crop_aspect_4_3"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:minHeight="40dp"
+            app:backgroundTint="@color/brand_dark_outline"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aspect_3_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            android:text="@string/crop_aspect_3_4"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:minHeight="40dp"
+            app:backgroundTint="@color/brand_dark_outline"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aspect_16_9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            android:text="@string/crop_aspect_16_9"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:minHeight="40dp"
+            app:backgroundTint="@color/brand_dark_outline"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aspect_9_16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            android:text="@string/crop_aspect_9_16"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:minHeight="40dp"
+            app:backgroundTint="@color/brand_dark_outline"
+            style="@style/Widget.Material3.Button" />
+    </LinearLayout>
+
+    <!-- أزرار الإجراءات -->
+    <LinearLayout
+        android:id="@+id/layout_actions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/brand_dark_surface"
+        android:padding="@dimen/spacing_md"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="@string/crop_cancel"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/brand_dark_outline"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_apply"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_md"
+            android:text="@string/crop_apply"
+            app:icon="@drawable/ic_check"
+            app:iconGravity="textStart"
+            style="@style/Widget.App.Button.Primary" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
