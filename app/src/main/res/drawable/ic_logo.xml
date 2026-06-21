@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- إطار الكاميرا (مستطيل بزوايا) -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M16,22 L64,22 A4,4 0 0 1 68,26 L68,58 A4,4 0 0 1 64,62 L16,62 A4,4 0 0 1 12,58 L12,26 A4,4 0 0 1 16,22 Z" />
+    <!-- العدسة (دائرة بيضاء) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,30 m-12,0 a12,12 0 1,1 24,0 a12,12 0 1,1 -24,0" />
+    <!-- العدسة الداخلية (دائرة برتقالية) -->
+    <path
+        android:fillColor="#FFD23F"
+        android:pathData="M40,30 m-7,0 a7,7 0 1,1 14,0 a7,7 0 1,1 -14,0" />
+    <!-- الفلاش (دائرة صغيرة) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M58,30 m-2,0 a2,2 0 1,1 4,0 a2,2 0 1,1 -4,0" />
+    <!-- الجبال (مثلثات بيضاء) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:alpha="0.95"
+        android:pathData="M12,52 L24,40 L32,48 L40,38 L52,50 L60,42 L68,52 L68,62 L12,62 Z" />
+</vector>
