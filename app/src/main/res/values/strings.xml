@@ -104,8 +104,6 @@
     <string name="preset_cinematic">سينمائي</string>
 
     <!-- History -->
-    <string name="action_undo">تراجع</string>
-    <string name="action_redo">إعادة</string>
     <string name="msg_no_undo">لا يوجد ما للتراجع عنه</string>
     <string name="msg_no_redo">لا يوجد ما لإعادته</string>
 </resources>
