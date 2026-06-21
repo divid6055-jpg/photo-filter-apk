@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_background"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/brand_background"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/app_name"
+            app:titleCentered="true"
+            style="@style/Widget.App.Toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <!-- أيقونة العنوان -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/spacing_lg">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:background="@drawable/circle_background"
+                    android:padding="@dimen/spacing_md"
+                    android:contentDescription="@string/app_name" />
+            </FrameLayout>
+
+            <!-- العنوان والوصف -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:text="@string/welcome_title"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.App.Headline"
+                android:textSize="28sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:text="@string/welcome_subtitle"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.App.Body"
+                android:textSize="16sp" />
+
+            <!-- منطقة رفع الصورة -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xl"
+                app:cardCornerRadius="@dimen/radius_lg"
+                app:cardBackgroundColor="@color/brand_surface"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/brand_outline"
+                app:strokeWidth="1dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_xl">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_image"
+                        android:contentDescription="@string/hint_select_image"
+                        app:tint="@color/brand_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:text="@string/hint_select_image"
+                        android:textAppearance="@style/TextAppearance.App.Title"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xs"
+                        android:text="@string/welcome_subtitle"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.App.Caption" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- أزرار العمل -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:layout_marginBottom="@dimen/spacing_xl">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_open_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="@string/action_open_image"
+                    app:icon="@drawable/ic_image"
+                    app:iconGravity="textStart"
+                    style="@style/Widget.App.Button.Primary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_open_camera"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/action_open_camera"
+                    app:icon="@drawable/ic_camera"
+                    app:iconGravity="textStart"
+                    android:backgroundTint="@color/brand_secondary"
+                    style="@style/Widget.App.Button.Primary" />
+            </LinearLayout>
+
+            <!-- قسم المميزات -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:layout_marginBottom="@dimen/spacing_lg">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="المميزات"
+                    android:textAppearance="@style/TextAppearance.App.Title"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <include layout="@layout/item_feature"
+                    android:id="@+id/feature_filters" />
+
+                <include layout="@layout/item_feature"
+                    android:id="@+id/feature_adjust"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm" />
+
+                <include layout="@layout/item_feature"
+                    android:id="@+id/feature_crop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm" />
+            </LinearLayout>
+
+            <!-- عن التطبيق -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_version"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.App.Caption"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:layout_marginBottom="@dimen/spacing_lg" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

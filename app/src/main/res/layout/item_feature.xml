@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="@dimen/spacing_md"
+    android:background="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/iv_feature_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_filter"
+        android:padding="@dimen/spacing_xs"
+        android:background="@drawable/circle_background"
+        app:tint="@color/brand_primary"
+        android:contentDescription="ميزة" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_md"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_feature_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="أكثر من 18 فلتر احترافي"
+            android:textAppearance="@style/TextAppearance.App.Title"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_feature_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Vintage, Sepia, Cinematic و أكثر"
+            android:textAppearance="@style/TextAppearance.App.Caption" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/brand_text_secondary"
+        android:contentDescription="متابعة" />
+</LinearLayout>
