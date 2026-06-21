@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors - Warm photo-editor palette (no blue/indigo) -->
+    <color name="brand_primary">#E85D2A</color>
+    <color name="brand_primary_dark">#B8431A</color>
+    <color name="brand_secondary">#F4A261</color>
+    <color name="brand_accent">#FFB627</color>
+    <color name="brand_surface">#FAFAF7</color>
+    <color name="brand_background">#F5F2EE</color>
+    <color name="brand_on_primary">#FFFFFF</color>
+    <color name="brand_text">#1F1B16</color>
+    <color name="brand_text_secondary">#6B6258</color>
+    <color name="brand_outline">#D9D2C5</color>
+
+    <!-- Dark theme -->
+    <color name="brand_dark_surface">#1A1714</color>
+    <color name="brand_dark_background">#0E0C0A</color>
+    <color name="brand_dark_text">#F5F2EE</color>
+    <color name="brand_dark_text_secondary">#A89E91</color>
+    <color name="brand_dark_outline">#3A332A</color>
+
+    <!-- Common -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="scrim">#99000000</color>
+</resources>

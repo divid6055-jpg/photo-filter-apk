@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">PhotoFilter Pro</string>
+
+    <!-- Main Activity -->
+    <string name="welcome_title">محرر الصور الاحترافي</string>
+    <string name="welcome_subtitle">عدّل صورك بفلاتر احترافية وأدوات متقدمة</string>
+    <string name="action_open_image">فتح صورة</string>
+    <string name="action_open_camera">الكاميرا</string>
+    <string name="action_continue">متابعة</string>
+    <string name="hint_select_image">اختر صورة للبدء</string>
+
+    <!-- Edit Activity -->
+    <string name="tab_filters">الفلاتر</string>
+    <string name="tab_adjust">التعديل</string>
+    <string name="tab_transform">التحويل</string>
+    <string name="tab_crop">القص</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_share">مشاركة</string>
+    <string name="action_compare">مقارنة</string>
+    <string name="action_reset">إعادة تعيين</string>
+    <string name="action_undo">تراجع</string>
+    <string name="action_redo">إعادة</string>
+
+    <!-- Adjust tools -->
+    <string name="adjust_brightness">السطوع</string>
+    <string name="adjust_contrast">التباين</string>
+    <string name="adjust_saturation">التشبع</string>
+    <string name="adjust_warmth">درجة الحرارة</string>
+    <string name="adjust_sharpness">الحدة</string>
+    <string name="adjust_exposure">التعرض</string>
+    <string name="adjust_highlights">الإضاءات</string>
+    <string name="adjust_shadows">الظلال</string>
+    <string name="adjust_vignette">تعتيم الحواف</string>
+    <string name="adjust_grain">الحبيبات</string>
+
+    <!-- Transform -->
+    <string name="transform_rotate_left">تدوير يسار</string>
+    <string name="transform_rotate_right">تدوير يمين</string>
+    <string name="transform_flip_h">قلب أفقي</string>
+    <string name="transform_flip_v">قلب عمودي</string>
+
+    <!-- Crop -->
+    <string name="crop_aspect_free">حر</string>
+    <string name="crop_aspect_1_1">1:1</string>
+    <string name="crop_aspect_4_3">4:3</string>
+    <string name="crop_aspect_3_4">3:4</string>
+    <string name="crop_aspect_16_9">16:9</string>
+    <string name="crop_aspect_9_16">9:16</string>
+    <string name="crop_apply">تطبيق القص</string>
+    <string name="crop_cancel">إلغاء</string>
+
+    <!-- Filters -->
+    <string name="filter_none">الأصلي</string>
+    <string name="filter_vintage">كلاسيكي</string>
+    <string name="filter_bw">أبيض وأسود</string>
+    <string name="filter_sepia">بني قديم</string>
+    <string name="filter_cool">بارد</string>
+    <string name="filter_warm">دافئ</string>
+    <string name="filter_vivid">زاهي</string>
+    <string name="filter_fade">باهت</string>
+    <string name="filter_noir">أسود درامي</string>
+    <string name="filter_cinematic">سينمائي</string>
+    <string name="filter_drama">درامي</string>
+    <string name="filter_silver">فضي</string>
+    <string name="filter_lomo">لومو</string>
+    <string name="filter_polaroid">بولارويد</string>
+    <string name="filter_sunrise">شروق</string>
+    <string name="filter_night">ليلي</string>
+    <string name="filter_sketch">رسم</string>
+    <string name="filter_invert">عكس الألوان</string>
+
+    <!-- Messages -->
+    <string name="msg_loading">جارٍ المعالجة...</string>
+    <string name="msg_saving">جارٍ الحفظ...</string>
+    <string name="msg_saved">تم حفظ الصورة في المعرض</string>
+    <string name="msg_save_failed">فشل حفظ الصورة</string>
+    <string name="msg_no_image">لم يتم اختيار صورة</string>
+    <string name="msg_permission_required">يلزم إذن الوصول للتخزين</string>
+    <string name="msg_image_too_large">الصورة كبيرة جداً، جارٍ التصغير</string>
+
+    <!-- About -->
+    <string name="about_version">الإصدار 1.0.0</string>
+    <string name="about_title">عن التطبيق</string>
+</resources>
