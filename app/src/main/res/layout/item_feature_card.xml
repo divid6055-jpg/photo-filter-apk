@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="24dp"
+    app:cardBackgroundColor="@color/brand_surface"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/brand_outline"
+    app:strokeWidth="1dp"
+    app:cardUseCompatPadding="false"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="18dp">
+
+        <!-- أيقونة الميزة في دائرة -->
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circle_gradient"
+                android:alpha="0.15" />
+
+            <ImageView
+                android:id="@+id/iv_feature_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_filter"
+                app:tint="@color/brand_primary"
+                android:contentDescription="ميزة" />
+        </FrameLayout>
+
+        <!-- نص الميزة -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_feature_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="أكثر من 18 فلتر احترافي"
+                android:textAppearance="@style/TextAppearance.App.Title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_feature_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Vintage, Sepia, Cinematic, Lomo وغيرها"
+                android:textAppearance="@style/TextAppearance.App.Caption"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- سهم -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/brand_text_secondary"
+            android:contentDescription="متابعة" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

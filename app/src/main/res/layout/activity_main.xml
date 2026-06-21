@@ -5,185 +5,383 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_background"
+    android:background="@drawable/bg_main_gradient"
     android:fitsSystemWindows="true">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/brand_background"
-        app:elevation="0dp">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/app_name"
-            app:titleCentered="true"
-            style="@style/Widget.App.Toolbar" />
-    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:clipToPadding="false"
+        android:paddingTop="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_md">
+            android:orientation="vertical">
 
-            <!-- أيقونة العنوان -->
+            <!-- ============== Hero Section (خلفية متدرّجة) ============== -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="60dp"
+                android:paddingBottom="40dp"
+                android:paddingHorizontal="24dp">
+
+                <!-- زخارف في الخلفية -->
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:background="@drawable/circle_glass"
+                    android:alpha="0.25"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="-60dp"
+                    android:layout_marginStart="-60dp" />
+
+                <View
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:background="@drawable/circle_glass"
+                    android:alpha="0.2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="-40dp" />
+
+                <!-- الشعار -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_app_logo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_logo"
+                    android:background="@drawable/circle_gradient"
+                    android:padding="14dp"
+                    android:elevation="8dp"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Large"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:contentDescription="شعار التطبيق" />
+
+                <!-- اسم التطبيق -->
+                <TextView
+                    android:id="@+id/tv_app_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="PhotoFilter Pro"
+                    android:textAppearance="@style/TextAppearance.App.Headline"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/brand_primary"
+                    app:layout_constraintTop_toBottomOf="@id/iv_app_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- الوصف -->
+                <TextView
+                    android:id="@+id/tv_app_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="محرر الصور الاحترافي"
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_app_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ============== منطقة رفع الصورة الكبيرة ============== -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/spacing_lg">
+                android:paddingHorizontal="24dp"
+                android:layout_marginTop="8dp">
 
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_launcher_foreground"
-                    android:background="@drawable/circle_background"
-                    android:padding="@dimen/spacing_md"
-                    android:contentDescription="@string/app_name" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="32dp"
+                    app:cardBackgroundColor="@color/brand_surface"
+                    app:cardElevation="3dp"
+                    app:strokeColor="@color/brand_outline"
+                    app:strokeWidth="1dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="40dp">
+
+                        <!-- أيقونة رفع الصورة في دائرة متدرّجة -->
+                        <FrameLayout
+                            android:layout_width="100dp"
+                            android:layout_height="100dp">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/circle_gradient"
+                                android:elevation="4dp" />
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_image_upload"
+                                android:elevation="5dp"
+                                app:tint="@color/white"
+                                android:contentDescription="رفع صورة" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="اختر صورة للبدء"
+                            android:textAppearance="@style/TextAppearance.App.Headline"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="اضغط هنا لاختيار صورة من معرضك"
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textSize="13sp"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </FrameLayout>
 
-            <!-- العنوان والوصف -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_lg"
-                android:text="@string/welcome_title"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.App.Headline"
-                android:textSize="28sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:text="@string/welcome_subtitle"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.App.Body"
-                android:textSize="16sp" />
-
-            <!-- منطقة رفع الصورة -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_upload"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xl"
-                app:cardCornerRadius="@dimen/radius_lg"
-                app:cardBackgroundColor="@color/brand_surface"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/brand_outline"
-                app:strokeWidth="1dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="@dimen/spacing_xl">
-
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/ic_image"
-                        android:contentDescription="@string/hint_select_image"
-                        app:tint="@color/brand_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:text="@string/hint_select_image"
-                        android:textAppearance="@style/TextAppearance.App.Title"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_xs"
-                        android:text="@string/welcome_subtitle"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.App.Caption" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- أزرار العمل -->
+            <!-- ============== أزرار العمل السريعة ============== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/spacing_lg"
-                android:layout_marginBottom="@dimen/spacing_xl">
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:layout_marginTop="20dp"
+                android:weightSum="2">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_open_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="@string/action_open_image"
-                    app:icon="@drawable/ic_image"
-                    app:iconGravity="textStart"
-                    style="@style/Widget.App.Button.Primary" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_gallery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/brand_surface"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/brand_outline"
+                    app:strokeWidth="1dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardUseCompatPadding="false">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_open_camera"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:text="@string/action_open_camera"
-                    app:icon="@drawable/ic_camera"
-                    app:iconGravity="textStart"
-                    android:backgroundTint="@color/brand_secondary"
-                    style="@style/Widget.App.Button.Primary" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_image"
+                            app:tint="@color/brand_primary"
+                            android:contentDescription="المعرض" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="المعرض"
+                            android:textAppearance="@style/TextAppearance.App.Title"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_camera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/brand_surface"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/brand_outline"
+                    app:strokeWidth="1dp"
+                    android:layout_marginStart="8dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_camera"
+                            app:tint="@color/brand_primary"
+                            android:contentDescription="الكاميرا" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="الكاميرا"
+                            android:textAppearance="@style/TextAppearance.App.Title"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- قسم المميزات -->
+            <!-- ============== قسم المميزات ============== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:layout_marginStart="24dp"
+                android:text="المميزات"
+                android:textAppearance="@style/TextAppearance.App.Headline"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="24dp"
+                android:text="كل ما تحتاجه لتحرير صورك"
+                android:textAppearance="@style/TextAppearance.App.Body"
+                android:textSize="13sp" />
+
+            <!-- بطاقات المميزات -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="@dimen/spacing_lg"
-                android:layout_marginBottom="@dimen/spacing_lg">
+                android:paddingHorizontal="24dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="24dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="المميزات"
-                    android:textAppearance="@style/TextAppearance.App.Title"
-                    android:layout_marginBottom="@dimen/spacing_md" />
-
-                <include layout="@layout/item_feature"
+                <include layout="@layout/item_feature_card"
                     android:id="@+id/feature_filters" />
 
-                <include layout="@layout/item_feature"
+                <include layout="@layout/item_feature_card"
                     android:id="@+id/feature_adjust"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm" />
+                    android:layout_marginTop="12dp" />
 
-                <include layout="@layout/item_feature"
+                <include layout="@layout/item_feature_card"
                     android:id="@+id/feature_crop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm" />
+                    android:layout_marginTop="12dp" />
+
+                <include layout="@layout/item_feature_card"
+                    android:id="@+id/feature_compare"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp" />
             </LinearLayout>
 
-            <!-- عن التطبيق -->
+            <!-- ============== إحصائيات ============== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingBottom="40dp"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="18+"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brand_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="فلتر"
+                        android:textSize="12sp"
+                        android:textColor="@color/brand_text_secondary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10+"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brand_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="أداة تعديل"
+                        android:textSize="12sp"
+                        android:textColor="@color/brand_text_secondary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brand_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="نسبة قص"
+                        android:textSize="12sp"
+                        android:textColor="@color/brand_text_secondary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ============== النسخة ============== -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/about_version"
+                android:layout_marginBottom="32dp"
+                android:text="PhotoFilter Pro v1.0.0"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.App.Caption"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:layout_marginBottom="@dimen/spacing_lg" />
+                android:textSize="11sp"
+                android:textColor="@color/brand_text_secondary"
+                android:letterSpacing="0.1" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
