@@ -433,9 +433,9 @@ object ImageProcessor {
             if (luma > threshold) {
                 // تكثيف الإضاءة
                 val factor = (luma - threshold).coerceAtMost(75) / 75f * 2f
-                val nr = (r * factor).coerceIn(0, 255).toInt()
-                val ng = (g * factor).coerceIn(0, 255).toInt()
-                val nb = (b * factor).coerceIn(0, 255).toInt()
+                val nr = (r * factor).toInt().coerceIn(0, 255)
+                val ng = (g * factor).toInt().coerceIn(0, 255)
+                val nb = (b * factor).toInt().coerceIn(0, 255)
                 val a = (pixels[i] ushr 24) and 0xFF
                 pixels[i] = (a shl 24) or (nr shl 16) or (ng shl 8) or nb
             } else {
