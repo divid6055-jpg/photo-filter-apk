@@ -31,6 +31,8 @@ object ImageProcessor {
 
     /** الحد الأقصى للبُعد لمنع OOM على الصور الكبيرة */
     private const val MAX_DIMENSION = 4096
+    private const val PREVIEW_MAX_DIMENSION = 2048  // للمعاينة
+    private const val THUMBNAIL_MAX_DIMENSION = 200  // للفلاتر
 
     // ===================== أدوات مساعدة عامة =====================
 
@@ -46,6 +48,21 @@ object ImageProcessor {
         val newW = (w * scale).toInt().coerceAtLeast(1)
         val newH = (h * scale).toInt().coerceAtLeast(1)
         return Bitmap.createScaledBitmap(bitmap, newW, newH, true)
+    }
+
+    /**
+     * يصغّر الصورة لأبعاد المعاينة (للمعاينة الحية السريعة).
+     * يجب استخدامه أثناء التحرير لتفادي OOM، واستخدام الصورة الأصلية للحفظ.
+     */
+    fun constrainToPreviewSize(bitmap: Bitmap): Bitmap {
+        return constrainSize(bitmap, PREVIEW_MAX_DIMENSION)
+    }
+
+    /**
+     * يصغّر الصورة لأبعاد Thumbnail (للقائمة الفلاتر).
+     */
+    fun constrainToThumbnailSize(bitmap: Bitmap): Bitmap {
+        return constrainSize(bitmap, THUMBNAIL_MAX_DIMENSION)
     }
 
     /**

@@ -38,6 +38,7 @@ class EditActivity : AppCompatActivity() {
     private lateinit var historyManager: HistoryManager
 
     private var sourceBitmap: Bitmap? = null
+    private var previewBitmap: Bitmap? = null  // نسخة مصغّرة للمعاينة السريعة
     private var editorState: EditorState = EditorState()
     private var compareMode: Boolean = false
 
@@ -83,6 +84,8 @@ class EditActivity : AppCompatActivity() {
                 return@launch
             }
             sourceBitmap = bitmap
+            // إنشاء نسخة مصغّرة للمعاينة السريعة
+            previewBitmap = ImageProcessor.constrainToPreviewSize(bitmap)
             binding.ivPreview.setImageBitmap(bitmap)
             binding.beforeAfterView.setBeforeBitmap(bitmap)
             binding.beforeAfterView.setAfterBitmap(bitmap)
@@ -262,6 +265,8 @@ class EditActivity : AppCompatActivity() {
                         ImageProcessor.cropBitmap(sourceBitmap!!, cropRect)
                     }
                     sourceBitmap = cropped
+                    // إعادة إنشاء previewBitmap بعد القص
+                    previewBitmap = ImageProcessor.constrainToPreviewSize(cropped)
                     binding.ivPreview.setImageBitmap(cropped)
                     binding.beforeAfterView.setBeforeBitmap(cropped)
                     binding.beforeAfterView.setAfterBitmap(cropped)
@@ -291,18 +296,6 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePreviewForComparison() {
-        val src = sourceBitmap ?: return
-        lifecycleScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                try { ImageProcessor.processFull(src, editorState) } catch (e: Exception) { null }
-            }
-            if (result != null) {
-                binding.beforeAfterView.setAfterBitmap(result)
-            }
-        }
-    }
-
     private fun schedulePreviewUpdate() {
         previewJob?.cancel()
         previewJob = lifecycleScope.launch {
@@ -312,7 +305,8 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun updatePreview() {
-        val src = sourceBitmap ?: return
+        // استخدام previewBitmap (المصغّر) للمعاينة الحية السريعة
+        val src = previewBitmap ?: return
         showProgress(true)
         processingJob?.cancel()
         processingJob = lifecycleScope.launch {
@@ -325,6 +319,18 @@ class EditActivity : AppCompatActivity() {
                 if (compareMode) {
                     binding.beforeAfterView.setAfterBitmap(result)
                 }
+            }
+        }
+    }
+
+    private fun updatePreviewForComparison() {
+        val src = previewBitmap ?: return
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                try { ImageProcessor.processFull(src, editorState) } catch (e: Exception) { null }
+            }
+            if (result != null) {
+                binding.beforeAfterView.setAfterBitmap(result)
             }
         }
     }

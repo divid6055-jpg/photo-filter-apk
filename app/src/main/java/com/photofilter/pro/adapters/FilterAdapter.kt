@@ -23,18 +23,8 @@ class FilterAdapter(
 
     // معاينة مصغّرة مشتركة (60dp) لكل الفلاتر - تُولّد lazily
     private val thumbBitmap: Bitmap by lazy {
-        val maxSize = 200
-        val scale = if (sourceBitmap.width > sourceBitmap.height) {
-            maxSize.toFloat() / sourceBitmap.width
-        } else {
-            maxSize.toFloat() / sourceBitmap.height
-        }
-        Bitmap.createScaledBitmap(
-            sourceBitmap,
-            (sourceBitmap.width * scale).toInt().coerceAtLeast(1),
-            (sourceBitmap.height * scale).toInt().coerceAtLeast(1),
-            true
-        )
+        // تصغير للصورة الأصلية لأداء أفضل
+        ImageProcessor.constrainToThumbnailSize(sourceBitmap)
     }
 
     // كاش للمعاينات
