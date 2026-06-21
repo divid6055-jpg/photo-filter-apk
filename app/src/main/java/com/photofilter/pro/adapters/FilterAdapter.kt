@@ -120,6 +120,16 @@ class FilterAdapter(
             FilterType.NIGHT -> com.photofilter.pro.R.string.filter_night
             FilterType.SKETCH -> com.photofilter.pro.R.string.filter_sketch
             FilterType.INVERT -> com.photofilter.pro.R.string.filter_invert
+            FilterType.HDR -> com.photofilter.pro.R.string.filter_hdr
+            FilterType.BLOOM -> com.photofilter.pro.R.string.filter_bloom
+            FilterType.AURORA -> com.photofilter.pro.R.string.filter_aurora
+            FilterType.MATTE -> com.photofilter.pro.R.string.filter_matte
+            FilterType.EMERALD -> com.photofilter.pro.R.string.filter_emerald
+            FilterType.CRIMSON -> com.photofilter.pro.R.string.filter_crimson
+            FilterType.GOLDEN -> com.photofilter.pro.R.string.filter_golden
+            FilterType.OCEAN -> com.photofilter.pro.R.string.filter_ocean
+            FilterType.PASTEL -> com.photofilter.pro.R.string.filter_pastel
+            FilterType.NEON -> com.photofilter.pro.R.string.filter_neon
         }
         return context.getString(resId)
     }

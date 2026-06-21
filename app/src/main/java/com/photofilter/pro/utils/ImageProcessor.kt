@@ -108,6 +108,17 @@ object ImageProcessor {
             FilterType.NIGHT -> applyNight(bitmap)
             FilterType.SKETCH -> applySketchFilter(bitmap)
             FilterType.INVERT -> applyInvert(bitmap)
+            // فلاتر احترافية جديدة
+            FilterType.HDR -> applyHDR(bitmap)
+            FilterType.BLOOM -> applyBloom(bitmap)
+            FilterType.AURORA -> applyAurora(bitmap)
+            FilterType.MATTE -> applyMatte(bitmap)
+            FilterType.EMERALD -> applyEmerald(bitmap)
+            FilterType.CRIMSON -> applyCrimson(bitmap)
+            FilterType.GOLDEN -> applyGolden(bitmap)
+            FilterType.OCEAN -> applyOcean(bitmap)
+            FilterType.PASTEL -> applyPastel(bitmap)
+            FilterType.NEON -> applyNeon(bitmap)
             else -> bitmap
         }
     }
@@ -326,6 +337,225 @@ object ImageProcessor {
             0f, 0f, -1f, 0f, 255f,
             0f, 0f, 0f, 1f, 0f
         ))
+        return applyColorMatrix(bitmap, cm)
+    }
+
+    // ===== الفلاتر الاحترافية الجديدة =====
+
+    /**
+     * HDR - تباين عالٍ مع إظهار التفاصيل في الإضاءات والظلال.
+     * يجمع بين المعالجة المتعددة الطبقات.
+     */
+    fun applyHDR(bitmap: Bitmap): Bitmap {
+        // 1. زيادة التباين العام
+        val cm = ColorMatrix(floatArrayOf(
+            1.25f, 0f, 0f, 0f, -25f,
+            0f, 1.25f, 0f, 0f, -25f,
+            0f, 0f, 1.25f, 0f, -25f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        var result = applyColorMatrix(bitmap, cm)
+        // 2. زيادة التشبع
+        val sat = ColorMatrix().apply { setSaturation(1.35f) }
+        result = applyColorMatrix(result, sat)
+        // 3. تحسين الظلال
+        result = applyHighlightsShadows(result, -10f, 30f)
+        return result
+    }
+
+    /**
+     * Bloom - توهج ناعم يبرز المناطق الساطعة.
+     */
+    fun applyBloom(bitmap: Bitmap): Bitmap {
+        // 1. استخراج المناطق الساطعة
+        val bright = extractBrightAreas(bitmap, 180)
+        // 2. blur للتوهج الناعم
+        val blurred = applySimpleBlur(bright, 8)
+        bright.recycle()
+        // 3. جمع الصورة الأصلية مع التوهج (screen blend)
+        val w = bitmap.width
+        val h = bitmap.height
+        val orig = IntArray(w * h)
+        val glow = IntArray(w * h)
+        bitmap.getPixels(orig, 0, w, 0, 0, w, h)
+        blurred.getPixels(glow, 0, w, 0, 0, w, h)
+        val out = IntArray(w * h)
+        for (i in orig.indices) {
+            val a = (orig[i] ushr 24) and 0xFF
+            val oR = (orig[i] shr 16) and 0xFF
+            val oG = (orig[i] shr 8) and 0xFF
+            val oB = orig[i] and 0xFF
+            val gR = (glow[i] shr 16) and 0xFF
+            val gG = (glow[i] shr 8) and 0xFF
+            val gB = glow[i] and 0xFF
+            // Screen blend: 255 - ((255 - a) * (255 - b) / 255)
+            val r = (255 - ((255 - oR) * (255 - gR) / 255)).coerceIn(0, 255)
+            val g = (255 - ((255 - oG) * (255 - gG) / 255)).coerceIn(0, 255)
+            val b = (255 - ((255 - oB) * (255 - gB) / 255)).coerceIn(0, 255)
+            out[i] = (a shl 24) or (r shl 16) or (g shl 8) or b
+        }
+        blurred.recycle()
+        val result = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        result.setPixels(out, 0, w, 0, 0, w, h)
+        return result
+    }
+
+    /**
+     * يستخرج المناطق الساطعة من الصورة (للاستخدام في Bloom).
+     */
+    private fun extractBrightAreas(bitmap: Bitmap, threshold: Int): Bitmap {
+        val w = bitmap.width
+        val h = bitmap.height
+        val pixels = IntArray(w * h)
+        bitmap.getPixels(pixels, 0, w, 0, 0, w, h)
+        for (i in pixels.indices) {
+            val r = (pixels[i] shr 16) and 0xFF
+            val g = (pixels[i] shr 8) and 0xFF
+            val b = pixels[i] and 0xFF
+            val luma = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
+            if (luma > threshold) {
+                // تكثيف الإضاءة
+                val factor = (luma - threshold).coerceAtMost(75) / 75f * 2f
+                val nr = (r * factor).coerceIn(0, 255).toInt()
+                val ng = (g * factor).coerceIn(0, 255).toInt()
+                val nb = (b * factor).coerceIn(0, 255).toInt()
+                val a = (pixels[i] ushr 24) and 0xFF
+                pixels[i] = (a shl 24) or (nr shl 16) or (ng shl 8) or nb
+            } else {
+                pixels[i] = 0
+            }
+        }
+        val result = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        result.setPixels(pixels, 0, w, 0, 0, w, h)
+        return result
+    }
+
+    /**
+     * Aurora - ألوان الشفق القطبي (أخضر/بنفسجي/أزرق).
+     */
+    fun applyAurora(bitmap: Bitmap): Bitmap {
+        val cm = ColorMatrix(floatArrayOf(
+            0.85f, 0f, 0.15f, 0f, 5f,
+            0.05f, 1.1f, 0.1f, 0f, 10f,
+            0.2f, 0.1f, 1.15f, 0f, 15f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        var result = applyColorMatrix(bitmap, cm)
+        val sat = ColorMatrix().apply { setSaturation(1.15f) }
+        result = applyColorMatrix(result, sat)
+        return result
+    }
+
+    /**
+     * Matte - مظهر سينمائي مسطّح بألوان باهتة.
+     */
+    fun applyMatte(bitmap: Bitmap): Bitmap {
+        // رفع النقاط السوداء وخفض البيضاء لتأثير مسطّح
+        val cm = ColorMatrix(floatArrayOf(
+            0.9f, 0f, 0f, 0f, 15f,
+            0f, 0.9f, 0f, 0f, 15f,
+            0f, 0f, 0.9f, 0f, 15f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        var result = applyColorMatrix(bitmap, cm)
+        val sat = ColorMatrix().apply { setSaturation(0.85f) }
+        result = applyColorMatrix(result, sat)
+        return result
+    }
+
+    /**
+     * Emerald - درجات خضراء فيروزية.
+     */
+    fun applyEmerald(bitmap: Bitmap): Bitmap {
+        val cm = ColorMatrix(floatArrayOf(
+            0.85f, 0f, 0f, 0f, 5f,
+            0f, 1.15f, 0f, 0f, 10f,
+            0f, 0.05f, 0.95f, 0f, 5f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        val sat = ColorMatrix().apply { setSaturation(1.1f) }
+        cm.postConcat(sat)
+        return applyColorMatrix(bitmap, cm)
+    }
+
+    /**
+     * Crimson - درجات حمراء قرمزية درامية.
+     */
+    fun applyCrimson(bitmap: Bitmap): Bitmap {
+        val cm = ColorMatrix(floatArrayOf(
+            1.25f, 0f, 0f, 0f, 5f,
+            0f, 0.85f, 0f, 0f, 0f,
+            0f, 0f, 0.8f, 0f, -5f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        val contrast = ColorMatrix(floatArrayOf(
+            1.15f, 0f, 0f, 0f, -15f,
+            0f, 1.15f, 0f, 0f, -15f,
+            0f, 0f, 1.15f, 0f, -15f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        cm.postConcat(contrast)
+        return applyColorMatrix(bitmap, cm)
+    }
+
+    /**
+     * Golden - ألوان ذهبية دافئة.
+     */
+    fun applyGolden(bitmap: Bitmap): Bitmap {
+        val cm = ColorMatrix(floatArrayOf(
+            1.2f, 0f, 0f, 0f, 15f,
+            0f, 1.1f, 0f, 0f, 8f,
+            0f, 0f, 0.75f, 0f, -10f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        val sat = ColorMatrix().apply { setSaturation(1.2f) }
+        cm.postConcat(sat)
+        return applyColorMatrix(bitmap, cm)
+    }
+
+    /**
+     * Ocean - درجات زرقاء/فيروزية عميقة.
+     */
+    fun applyOcean(bitmap: Bitmap): Bitmap {
+        val cm = ColorMatrix(floatArrayOf(
+            0.8f, 0f, 0f, 0f, -5f,
+            0f, 0.95f, 0f, 0f, 5f,
+            0f, 0.05f, 1.2f, 0f, 20f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        val sat = ColorMatrix().apply { setSaturation(1.05f) }
+        cm.postConcat(sat)
+        return applyColorMatrix(bitmap, cm)
+    }
+
+    /**
+     * Pastel - ألوان باستيل ناعمة.
+     */
+    fun applyPastel(bitmap: Bitmap): Bitmap {
+        val cm = ColorMatrix(floatArrayOf(
+            0.95f, 0.05f, 0.05f, 0f, 20f,
+            0.05f, 0.95f, 0.05f, 0f, 20f,
+            0.05f, 0.05f, 0.95f, 0f, 20f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        val sat = ColorMatrix().apply { setSaturation(0.8f) }
+        cm.postConcat(sat)
+        return applyColorMatrix(bitmap, cm)
+    }
+
+    /**
+     * Neon - ألوان نيون زاهية في الليل.
+     */
+    fun applyNeon(bitmap: Bitmap): Bitmap {
+        // تشبع عالٍ جداً + تباين عالٍ
+        val cm = ColorMatrix().apply { setSaturation(2f) }
+        val contrast = ColorMatrix(floatArrayOf(
+            1.3f, 0f, 0f, 0f, -40f,
+            0f, 1.3f, 0f, 0f, -40f,
+            0f, 0f, 1.3f, 0f, -40f,
+            0f, 0f, 0f, 1f, 0f
+        ))
+        cm.postConcat(contrast)
         return applyColorMatrix(bitmap, cm)
     }
 

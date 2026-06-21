@@ -68,6 +68,16 @@
     <string name="filter_night">ليلي</string>
     <string name="filter_sketch">رسم</string>
     <string name="filter_invert">عكس الألوان</string>
+    <string name="filter_hdr">HDR</string>
+    <string name="filter_bloom">توهج</string>
+    <string name="filter_aurora">شفق</string>
+    <string name="filter_matte">مطفي</string>
+    <string name="filter_emerald">زمردي</string>
+    <string name="filter_crimson">قرمزي</string>
+    <string name="filter_golden">ذهبي</string>
+    <string name="filter_ocean">محيط</string>
+    <string name="filter_pastel">باستيل</string>
+    <string name="filter_neon">نيون</string>
 
     <!-- Messages -->
     <string name="msg_loading">جارٍ المعالجة...</string>

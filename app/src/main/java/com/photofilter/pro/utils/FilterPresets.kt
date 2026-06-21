@@ -24,7 +24,18 @@ enum class FilterType(val id: String) {
     SUNRISE("sunrise"),
     NIGHT("night"),
     SKETCH("sketch"),
-    INVERT("invert");
+    INVERT("invert"),
+    // فلاتر احترافية جديدة
+    HDR("hdr"),
+    BLOOM("bloom"),
+    AURORA("aurora"),
+    MATTE("matte"),
+    EMERALD("emerald"),
+    CRIMSON("crimson"),
+    GOLDEN("golden"),
+    OCEAN("ocean"),
+    PASTEL("pastel"),
+    NEON("neon");
 
     companion object {
         fun fromId(id: String): FilterType = entries.find { it.id == id } ?: NONE
